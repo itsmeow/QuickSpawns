@@ -1,0 +1,16 @@
+[
+{
+  "modid": "quickspawns",
+  "name": "Quick Spawns",
+  "description": "This mod adds a quick and easy way to set spawns with /setspawn and /spawn",
+  "version": "1.0.0",
+  "mcversion": "${mcversion}",
+  "url": "http://itsmeow.net16.net",
+  "updateUrl": "https://minecraft.curseforge.com/projects/quickspawns",
+  "authorList": ["its_meow"],
+  "credits": "its_meow, for programming, ideas, design, and leading(formerly known as hiotewdew)",
+  "logoFile": "quickspawns.png",
+  "screenshots": [],
+  "dependencies": []
+}
+]
