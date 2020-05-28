@@ -44,8 +44,8 @@ public class QuickSpawnsMod {
                 player.sendMessage(new StringTextComponent("No spawn has been set!").setStyle(new Style().setColor(TextFormatting.RED)));
                 return 0;
             } else {
-                ServerWorld destWorld = player.getEntityWorld().getServer().func_71218_a(DimensionType.byName(new ResourceLocation(data.getString("dimension"))));
-                player.func_200619_a(destWorld, data.getDouble("x"), data.getDouble("y"), data.getDouble("z"), data.getFloat("yaw"), data.getFloat("pitch"));
+                ServerWorld destWorld = player.getEntityWorld().getServer().getWorld(DimensionType.byName(new ResourceLocation(data.getString("dimension"))));
+                player.teleport(destWorld, data.getDouble("x"), data.getDouble("y"), data.getDouble("z"), data.getFloat("yaw"), data.getFloat("pitch"));
             }
             return 1;
         }));
@@ -60,9 +60,9 @@ public class QuickSpawnsMod {
         }).executes(command -> {
             ServerPlayerEntity player = command.getSource().asPlayer();
             QSWorldStorage sd = QSWorldStorage.get(player.world);
-            sd.data.putDouble("x", player.posX);
-            sd.data.putDouble("y", player.posY);
-            sd.data.putDouble("z", player.posZ);
+            sd.data.putDouble("x", player.getPosX());
+            sd.data.putDouble("y", player.getPosY());
+            sd.data.putDouble("z", player.getPosZ());
             sd.data.putFloat("yaw", player.rotationYawHead);
             sd.data.putFloat("pitch", player.rotationPitch);
             sd.data.putString("dimension", player.getEntityWorld().getDimension().getType().getRegistryName().toString());
@@ -71,7 +71,7 @@ public class QuickSpawnsMod {
             return 1;
         }));
     }
-    
+
     public static class QSWorldStorage extends WorldSavedData {
         private static final String DATA_NAME = QuickSpawnsMod.MOD_ID + "_SpawnData";
         public CompoundNBT data = new CompoundNBT();
@@ -86,7 +86,7 @@ public class QuickSpawnsMod {
 
         @SuppressWarnings("resource")
         public static QSWorldStorage get(World world) {
-            return world.getServer().func_71218_a(DimensionType.OVERWORLD).getSavedData().getOrCreate(QSWorldStorage::new, DATA_NAME);
+            return world.getServer().getWorld(DimensionType.OVERWORLD).getSavedData().getOrCreate(QSWorldStorage::new, DATA_NAME);
         }
 
         @Override

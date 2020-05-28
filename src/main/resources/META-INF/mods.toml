@@ -1,5 +1,5 @@
 modLoader="javafml" #mandatory
-loaderVersion="[28,)" #mandatory
+loaderVersion="[30,)" #mandatory
 issueTrackerURL="http://github.com/itsmeow/QuickSpawns/issues" #optional
 displayURL="https://www.curseforge.com/minecraft/mc-mods/quickspawns" #optional
 logoFile="quickspawns.png" #optional
