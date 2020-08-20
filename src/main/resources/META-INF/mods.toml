@@ -1,14 +1,20 @@
-modLoader="javafml" #mandatory
-loaderVersion="[30,)" #mandatory
-issueTrackerURL="http://github.com/itsmeow/QuickSpawns/issues" #optional
-displayURL="https://www.curseforge.com/minecraft/mc-mods/quickspawns" #optional
-logoFile="quickspawns.png" #optional
-credits="its_meow, for programming, ideas, design, and leading" #optional
-authors="its_meow" #optional
-[[mods]] #mandatory
-modId="quickspawns" #mandatory
-version="${file.jarVersion}" #mandatory
-displayName="QuickSpawns" #mandatory
-# The description text for the mod (multi line!) (#mandatory)
+modLoader="javafml"
+loaderVersion="[33,)"
+license="CC BY-NC-SA 4.0 IPL"
+issueTrackerURL="http://github.com/itsmeow/QuickSpawns/issues"
+displayURL="https://www.curseforge.com/minecraft/mc-mods/quickspawns"
+logoFile="quickspawns.png"
+credits="its_meow, for programming, ideas, design, and leading"
+authors="its_meow"
+[[mods]]
+modId="quickspawns"
+version="${file.jarVersion}"
+displayName="QuickSpawns"
 description='''
 This mod adds a quick and easy way to set spawns with /setspawn and /spawn'''
+[[dependencies.quickspawns]]
+    modId="forge"
+    mandatory=true
+    versionRange="[33.0.0,)"
+    ordering="NONE"
+    side="BOTH"

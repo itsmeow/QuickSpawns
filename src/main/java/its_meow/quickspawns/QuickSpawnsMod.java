@@ -7,12 +7,14 @@ import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
-import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -28,7 +30,7 @@ public class QuickSpawnsMod {
     @SuppressWarnings("resource")
     @SubscribeEvent
     public static void onServerStarting(FMLServerStartingEvent event) {
-        CommandDispatcher<CommandSource> d = event.getCommandDispatcher();
+        CommandDispatcher<CommandSource> d = event.getServer().getCommandManager().getDispatcher();
 
         // spawn
         d.register(Commands.literal("spawn").requires(source -> {
@@ -41,10 +43,10 @@ public class QuickSpawnsMod {
             ServerPlayerEntity player = command.getSource().asPlayer();
             CompoundNBT data = QSWorldStorage.get(player.getEntityWorld()).data;
             if(data == null || !data.contains("dimension") || !data.contains("x") || !data.contains("y") || !data.contains("z") || !data.contains("yaw") || !data.contains("pitch")) {
-                player.sendMessage(new StringTextComponent("No spawn has been set!").setStyle(new Style().setColor(TextFormatting.RED)));
+                player.sendMessage(new StringTextComponent("No spawn has been set!").setStyle(Style.EMPTY.withColor(TextFormatting.RED)), Util.NIL_UUID);
                 return 0;
             } else {
-                ServerWorld destWorld = player.getEntityWorld().getServer().getWorld(DimensionType.byName(new ResourceLocation(data.getString("dimension"))));
+                ServerWorld destWorld = player.getEntityWorld().getServer().getWorld(RegistryKey.of(Registry.DIMENSION, new ResourceLocation(data.getString("dimension"))));
                 player.teleport(destWorld, data.getDouble("x"), data.getDouble("y"), data.getDouble("z"), data.getFloat("yaw"), data.getFloat("pitch"));
             }
             return 1;
@@ -60,14 +62,14 @@ public class QuickSpawnsMod {
         }).executes(command -> {
             ServerPlayerEntity player = command.getSource().asPlayer();
             QSWorldStorage sd = QSWorldStorage.get(player.world);
-            sd.data.putDouble("x", player.getPosX());
-            sd.data.putDouble("y", player.getPosY());
-            sd.data.putDouble("z", player.getPosZ());
+            sd.data.putDouble("x", player.getX());
+            sd.data.putDouble("y", player.getY());
+            sd.data.putDouble("z", player.getZ());
             sd.data.putFloat("yaw", player.rotationYawHead);
             sd.data.putFloat("pitch", player.rotationPitch);
-            sd.data.putString("dimension", player.getEntityWorld().getDimension().getType().getRegistryName().toString());
+            sd.data.putString("dimension", player.getEntityWorld().getRegistryKey().getValue().toString());
             sd.markDirty();
-            player.sendMessage(new StringTextComponent("Spawn set.").setStyle(new Style().setColor(TextFormatting.GREEN)));
+            player.sendMessage(new StringTextComponent("Spawn set.").setStyle(Style.EMPTY.withColor(TextFormatting.GREEN)), Util.NIL_UUID);
             return 1;
         }));
     }
@@ -84,9 +86,8 @@ public class QuickSpawnsMod {
             super(s);
         }
 
-        @SuppressWarnings("resource")
         public static QSWorldStorage get(World world) {
-            return world.getServer().getWorld(DimensionType.OVERWORLD).getSavedData().getOrCreate(QSWorldStorage::new, DATA_NAME);
+            return world.getServer().getWorld(World.OVERWORLD).getSavedData().getOrCreate(QSWorldStorage::new, DATA_NAME);
         }
 
         @Override
