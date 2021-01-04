@@ -59,7 +59,7 @@ public class QuickSpawnsMod {
             } catch(CommandSyntaxException e) {
                 return false;
             }
-        }).executes(command -> {
+        }).requires(s -> s.hasPermissionLevel(3)).executes(command -> {
             ServerPlayerEntity player = command.getSource().asPlayer();
             QSWorldStorage sd = QSWorldStorage.get(player.world);
             sd.data.putDouble("x", player.getX());
