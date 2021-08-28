@@ -17,6 +17,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.WorldSavedData;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
@@ -27,13 +28,19 @@ public class QuickSpawnsMod {
 
     public static final String MOD_ID = "quickspawns";
 
-    @SuppressWarnings("resource")
+    @SubscribeEvent
+    public static void onRegisterCommandEvent(RegisterCommandsEvent event) {
+        registerCommands(event.getDispatcher());
+    }
+
     @SubscribeEvent
     public static void onServerStarting(FMLServerStartingEvent event) {
-        CommandDispatcher<CommandSource> d = event.getServer().getCommandManager().getDispatcher();
+        registerCommands(event.getServer().getCommandManager().getDispatcher());
+    }
 
+    public static void registerCommands(CommandDispatcher<CommandSource> commandDispatcher) {
         // spawn
-        d.register(Commands.literal("spawn").requires(source -> {
+        commandDispatcher.register(Commands.literal("spawn").requires(source -> {
             try {
                 return source.asPlayer() != null;
             } catch(CommandSyntaxException e) {
@@ -53,7 +60,7 @@ public class QuickSpawnsMod {
         }));
 
         // setspawn
-        d.register(Commands.literal("setspawn").requires(source -> {
+        commandDispatcher.register(Commands.literal("setspawn").requires(source -> {
             try {
                 return source.asPlayer() != null;
             } catch(CommandSyntaxException e) {
