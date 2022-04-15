@@ -1,0 +1,12 @@
+apply from: 'https://maven.itsmeow.dev/scripts/architectury-fabric.gradle'
+repositories {
+    maven {
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com/"
+    }
+}
+dependencies {
+    modRuntimeOnly("com.terraformersmc:modmenu:1.16.22") {
+        transitive = false
+    }
+}

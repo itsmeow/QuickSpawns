@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "quickspawns",
+  "version": "${version}",
+  "name": "QuickSpawns",
+  "description": "This mod adds a quick and easy way to set spawns with /setspawn and /spawn",
+  "authors": ["itsmeowdev"],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/quickspawns",
+    "sources": "https://github.com/itsmeow/QuickSpawns",
+    "issues": "https://github.com/itsmeow/QuickSpawns/issues"
+  },
+  "license": "MIT",
+  "icon": "quickspawns.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["dev.itsmeow.quickspawns.QuickSpawnsModFabric"]
+  },
+  "depends": {
+    "minecraft": "1.16.5",
+    "fabricloader": ">=0.12.0",
+    "fabric": ">=0.32.0"
+  },
+  "mixins": [],
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.itsmeow.dev/"
+      }
+    }
+  }
+}
