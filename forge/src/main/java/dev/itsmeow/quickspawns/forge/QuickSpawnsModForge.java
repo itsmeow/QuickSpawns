@@ -1,5 +1,6 @@
-package dev.itsmeow.quickspawns;
+package dev.itsmeow.quickspawns.forge;
 
+import dev.itsmeow.quickspawns.QuickSpawnsMod;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.IExtensionPoint;
