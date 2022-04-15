@@ -17,7 +17,7 @@
     "main": ["dev.itsmeow.quickspawns.QuickSpawnsModFabric"]
   },
   "depends": {
-    "minecraft": "1.17.1",
+    "minecraft": "1.18.x",
     "fabricloader": ">=0.12.0",
     "fabric": ">=0.32.0"
   },
