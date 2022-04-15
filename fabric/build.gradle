@@ -6,7 +6,7 @@ repositories {
     }
 }
 dependencies {
-    modRuntimeOnly("com.terraformersmc:modmenu:1.16.22") {
+    modRuntimeOnly("com.terraformersmc:modmenu:2.0.14") {
         transitive = false
     }
 }

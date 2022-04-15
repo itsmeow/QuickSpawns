@@ -49,7 +49,7 @@ public class QuickSpawnsMod {
         // setspawn
         d.register(Commands.literal("setspawn").requires(isPlayer).requires(s -> s.hasPermission(3)).executes(command -> {
             ServerPlayer player = command.getSource().getPlayerOrException();
-            QSWorldStorage.getOrCreate(player.getLevel()).setSpawn(player.position(), player.getYHeadRot(), player.xRot, player.getLevel().dimension());
+            QSWorldStorage.getOrCreate(player.getLevel()).setSpawn(player.position(), player.getYHeadRot(), player.getXRot(), player.getLevel().dimension());
             player.sendMessage(new TextComponent("Spawn set.").withStyle(ChatFormatting.GREEN), Util.NIL_UUID);
             return 1;
         }));
@@ -57,29 +57,35 @@ public class QuickSpawnsMod {
 
     public static class QSWorldStorage extends SavedData {
         private static final String DATA_NAME = QuickSpawnsMod.MOD_ID + "_SpawnData";
-        private boolean exists = false;
+        private boolean exists;
         private Vec3 pos;
         private ResourceKey<Level> dim;
         private double yaw;
         private double pitch;
 
         public QSWorldStorage() {
-            super(DATA_NAME);
+            exists = false;
+        }
+
+        public QSWorldStorage(Vec3 pos, double yaw, double pitch, ResourceKey<Level> dim) {
+            this.pos = pos;
+            this.yaw = yaw;
+            this.pitch = pitch;
+            this.dim = dim;
+            exists = true;
         }
 
         public static QSWorldStorage getOrCreate(Level level) {
-            return level.getServer().getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent(QSWorldStorage::new, DATA_NAME);
-        }
-
-        @Override
-        public void load(CompoundTag compoundTag) {
-            if(compoundTag != null && compoundTag.contains("x") && compoundTag.contains("y") && compoundTag.contains("z") && compoundTag.contains("yaw") && compoundTag.contains("pitch") && compoundTag.contains("dimension")) {
-                pos = new Vec3(compoundTag.getDouble("x"), compoundTag.getDouble("y"), compoundTag.getDouble("z"));
-                yaw = compoundTag.getDouble("yaw");
-                pitch = compoundTag.getDouble("pitch");
-                dim = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(compoundTag.getString("dimension")));
-                exists = true;
-            }
+            return level.getServer().getLevel(Level.OVERWORLD).getDataStorage().computeIfAbsent(compoundTag -> {
+                if(compoundTag != null && compoundTag.contains("x") && compoundTag.contains("y") && compoundTag.contains("z") && compoundTag.contains("yaw") && compoundTag.contains("pitch") && compoundTag.contains("dimension")) {
+                    Vec3 pos = new Vec3(compoundTag.getDouble("x"), compoundTag.getDouble("y"), compoundTag.getDouble("z"));
+                    double yaw = compoundTag.getDouble("yaw");
+                    double pitch = compoundTag.getDouble("pitch");
+                    ResourceKey<Level> dim = ResourceKey.create(Registry.DIMENSION_REGISTRY, new ResourceLocation(compoundTag.getString("dimension")));
+                    return new QSWorldStorage(pos, yaw, pitch, dim);
+                }
+                return null;
+            }, QSWorldStorage::new, DATA_NAME);
         }
 
         @Override
