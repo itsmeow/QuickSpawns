@@ -3,12 +3,11 @@ package dev.itsmeow.quickspawns;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.ChatFormatting;
-import net.minecraft.Util;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -36,7 +35,7 @@ public class QuickSpawnsMod {
             ServerPlayer player = command.getSource().getPlayerOrException();
             QSWorldStorage data = QSWorldStorage.getOrCreate(player.getLevel());
             if(data != null && !data.spawnExists()) {
-                player.sendMessage(new TextComponent("No spawn has been set!").withStyle(ChatFormatting.RED), Util.NIL_UUID);
+                player.sendSystemMessage(Component.literal("No spawn has been set!").withStyle(ChatFormatting.RED));
                 return 0;
             } else {
                 ServerLevel level = player.getLevel().getServer().getLevel(data.getSpawnLevel());
@@ -50,7 +49,7 @@ public class QuickSpawnsMod {
         d.register(Commands.literal("setspawn").requires(isPlayer).requires(s -> s.hasPermission(3)).executes(command -> {
             ServerPlayer player = command.getSource().getPlayerOrException();
             QSWorldStorage.getOrCreate(player.getLevel()).setSpawn(player.position(), player.getYHeadRot(), player.getXRot(), player.getLevel().dimension());
-            player.sendMessage(new TextComponent("Spawn set.").withStyle(ChatFormatting.GREEN), Util.NIL_UUID);
+            player.sendSystemMessage(Component.literal("Spawn set.").withStyle(ChatFormatting.GREEN));
             return 1;
         }));
     }
